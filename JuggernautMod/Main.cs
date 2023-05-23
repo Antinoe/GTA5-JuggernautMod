@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using GTA;
 using GTA.Native;
@@ -10,9 +10,9 @@ using LemonUI.Elements;
 
 namespace JuggernautMod
 {
-    public class BaseScript : Script
+    public class BaseClass : Script
     {
-        public BaseScript()
+        public BaseClass()
         {
             Tick += OnUpdate;
             KeyDown += OnKeyPressed;
@@ -23,7 +23,7 @@ namespace JuggernautMod
         protected virtual void OnKeyPressed(object sender, KeyEventArgs e) { }
         protected virtual void OnKeyReleased(object sender, KeyEventArgs e) { }
     }
-    public class JuggernautPlayer : BaseScript
+    public class JuggernautPlayer : BaseClass
     {
         public static bool isWearingJuggernautSuit;
         protected override void OnUpdate(object sender, EventArgs e)
