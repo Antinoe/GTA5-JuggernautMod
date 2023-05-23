@@ -33,6 +33,7 @@ namespace JuggernautMod
                 Player player = Game.Player;
                 Ped playerPed = Game.Player.Character;
                 Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
+                Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
                 Game.DisableControlThisFrame(Control.Jump);
                 Game.DisableControlThisFrame(Control.Enter);
                 Game.DisableControlThisFrame(Control.Cover);
