@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JuggernautMod", "JuggernautMod\JuggernautMod.csproj", "{8D1A51D1-1626-48CD-81F2-B8F354A7B3A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D1A51D1-1626-48CD-81F2-B8F354A7B3A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1A51D1-1626-48CD-81F2-B8F354A7B3A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1A51D1-1626-48CD-81F2-B8F354A7B3A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1A51D1-1626-48CD-81F2-B8F354A7B3A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FCCE4DB1-D056-436F-9C39-D5AE1F4201AB}
+	EndGlobalSection
+EndGlobal
