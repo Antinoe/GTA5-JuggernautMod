@@ -60,6 +60,10 @@ namespace JuggernautMod
                 else { UnequipJuggernautSuit(playerPed); }
             }
         }
+        public virtual bool TryToEquipJuggernautSuit(Ped ped)
+        {
+            return true;
+        }
         public static void EquipJuggernautSuit(Ped ped)
         {
             Player player = Game.Player;
