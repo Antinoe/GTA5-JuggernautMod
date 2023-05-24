@@ -51,11 +51,11 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
+            //if (Game.IsControlPressed(Control.Sprint) && Game.IsControlJustPressed(Control.VehicleNextRadio))
+            //if (Game.IsControlPressed(Control.Sprint) && e.KeyCode == Keys.OemPeriod)
+            //if (e.KeyCode == Keys.LShiftKey && e.KeyCode == Keys.OemPeriod)
             if (e.KeyCode == Keys.OemPeriod)
-            //if (Game.IsControlJustReleased(Control.Sprint) && Game.IsControlJustReleased(Control.VehicleNextRadio))
             {
-                //isWearingJuggernautSuit = ();
-                //isWearingJuggernautSuit = !isWearingJuggernautSuit;
                 //Item item = Companion.Inventories.GetRandomItem();
                 //Companion.Inventories.Current.Add(item);
                 ToggleJuggernautSuit(playerPed);
