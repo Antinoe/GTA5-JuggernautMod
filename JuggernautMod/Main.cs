@@ -15,11 +15,13 @@ namespace JuggernautMod
         public BaseClass()
         {
             Tick += OnUpdate;
+            Aborted += OnAbort;
             KeyDown += OnKeyPressed;
             KeyUp += OnKeyReleased;
             Interval = 0;
         }
         protected virtual void OnUpdate(object sender, EventArgs e) { }
+        protected virtual void OnAbort(object sender, EventArgs e) { }
         protected virtual void OnKeyPressed(object sender, KeyEventArgs e) { }
         protected virtual void OnKeyReleased(object sender, KeyEventArgs e) { }
     }
