@@ -93,6 +93,12 @@ namespace JuggernautMod
             Function.Call(Hash.RESET_PED_STRAFE_CLIPSET, playerPed);
             Function.Call(Hash.SET_WEAPON_ANIMATION_OVERRIDE, playerPed, 0x0);
         }
+        protected override void OnAbort(object sender, EventArgs e)
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            UnequipJuggernautSuit(playerPed);
+        }
     }
     public abstract class JuggernautSuit : StackableItem
     {
