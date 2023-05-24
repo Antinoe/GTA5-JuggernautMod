@@ -65,8 +65,14 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
-            if (!isWearingJuggernautSuit && CanEquipJuggernautSuit(playerPed)) { EquipJuggernautSuit(playerPed); }
-            if (isWearingJuggernautSuit) { UnequipJuggernautSuit(playerPed); }
+            if (!isWearingJuggernautSuit)
+            {
+                if (CanEquipJuggernautSuit(playerPed))
+                {
+                    EquipJuggernautSuit(playerPed);
+                }
+            }
+            else { UnequipJuggernautSuit(playerPed); }
         }
         public virtual bool CanEquipJuggernautSuit(Ped ped)
         {
