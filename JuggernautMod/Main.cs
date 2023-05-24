@@ -51,7 +51,7 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
-            if (e.KeyCode == Keys.OemPeriod)
+            if (e.KeyCode == Keys.OemPeriod && CanEquipJuggernautSuit(playerPed))
             //if (Game.IsControlJustReleased(Control.Sprint) && Game.IsControlJustReleased(Control.VehicleNextRadio))
             {
                 //isWearingJuggernautSuit = ();
@@ -62,7 +62,7 @@ namespace JuggernautMod
                 else { UnequipJuggernautSuit(playerPed); }
             }
         }
-        public virtual bool TryToEquipJuggernautSuit(Ped ped)
+        public virtual bool CanEquipJuggernautSuit(Ped ped)
         {
             return true;
         }
