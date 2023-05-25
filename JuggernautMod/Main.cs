@@ -5,8 +5,9 @@ using GTA.Native;
 using Control = GTA.Control;
 using Hash = GTA.Native.Hash;
 using LemonUI;
-using PlayerCompanion;
 using LemonUI.Elements;
+using LemonUI.Menus;
+using PlayerCompanion;
 
 namespace JuggernautMod
 {
@@ -30,14 +31,28 @@ namespace JuggernautMod
     public class JuggernautPlayer : BaseClass
     {
         public static bool isWearingJuggernautSuit;
+        private readonly ObjectPool pool = new ObjectPool();
+        readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
+        NativeItem itemEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
+
         protected override void OnStart()
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
+            pool.Add(menuJuggernaut);
+            menuJuggernaut.Add(itemEquipJuggernautSuit);
+        }
+        public JuggernautPlayer()
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            itemEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
         }
         protected override void OnUpdate(object sender, EventArgs e)
         {
+            //  These run the UI stuff created within the class.
+            pool.Process();
             if (isWearingJuggernautSuit)
             {
                 Player player = Game.Player;
@@ -66,7 +81,7 @@ namespace JuggernautMod
             {
                 //Item item = Companion.Inventories.GetRandomItem();
                 //Companion.Inventories.Current.Add(item);
-                ToggleJuggernautSuit(playerPed);
+                menuJuggernaut.Visible = true;
             }
         }
         protected void ToggleJuggernautSuit(Ped ped)
