@@ -30,6 +30,13 @@ namespace JuggernautMod
     public class JuggernautPlayer : BaseClass
     {
         public static bool isWearingJuggernautSuit;
+        protected override void OnStart()
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            pool.Add(menu);
+            Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
+        }
         protected override void OnUpdate(object sender, EventArgs e)
         {
             if (isWearingJuggernautSuit)
