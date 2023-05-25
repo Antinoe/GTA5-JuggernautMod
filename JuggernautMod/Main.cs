@@ -28,12 +28,13 @@ namespace JuggernautMod
             Interval = 0;
         }
     }
-    public class JuggernautPlayer : BaseClass
+    public class JuggernautScript : BaseClass
     {
         public static bool isWearingJuggernautSuit;
         private readonly ObjectPool pool = new ObjectPool();
         readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
-        NativeItem itemEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
+        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");NativeCheckboxItem checkboxItem = new NativeCheckboxItem("Checkbox Item", "This is a NativeCheckboxItem that contains a checkbox that can be turned on and off.", true);
+        NativeCheckboxItem optionOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "Toggle this on to force the Minigun to be used whenever wearing the suit.", true);
 
         protected override void OnStart()
         {
@@ -41,8 +42,9 @@ namespace JuggernautMod
             Ped playerPed = Game.Player.Character;
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
-            menuJuggernaut.Add(itemEquipJuggernautSuit);
-            itemEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
+            menuJuggernaut.Add(optionEquipJuggernautSuit);
+            menuJuggernaut.Add(optionOnlyMinigun);
+            optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
         }
         protected override void OnUpdate(object sender, EventArgs e)
         {
@@ -58,7 +60,10 @@ namespace JuggernautMod
                 Game.DisableControlThisFrame(Control.Enter);
                 Game.DisableControlThisFrame(Control.Cover);
                 Game.DisableControlThisFrame(Control.Duck);
-                //Game.DisableControlThisFrame(Control.SelectWeapon);
+                if (optionOnlyMinigun.Checked)
+                {
+                    Game.DisableControlThisFrame(Control.SelectWeapon);
+                }
                 if (playerPed.Health <= 200)
                 {
                     UnequipJuggernautSuit(playerPed);
@@ -100,6 +105,10 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
+            WeaponCollection weapon = Game.Player.Character.Weapons;
+            Weapon minigun = weapon.HasWeapon(WeaponHash.Minigun) ? weapon[WeaponHash.Minigun] : weapon.Give(WeaponHash.Minigun, 0, true, true);
+            minigun.Ammo += 9999;
+            minigun.InfiniteAmmo = true;
             isWearingJuggernautSuit = true;
             playerPed.MaxHealth = 2000;
             playerPed.Health = 2000;
@@ -111,19 +120,31 @@ namespace JuggernautMod
             Function.Call(Hash.SET_WEAPON_ANIMATION_OVERRIDE, playerPed, 0x5534A626);
 
             //  Setting Components
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 5, 0, 0); //Upper
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 5, 0, 0); //Lower
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 1, 0, 0); //Hands
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 5, 0, 0); //Shoes
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 5, 0, 0); //Accessory 0
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
-            Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
-            Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 26, 0, false); //Hats
+            //var isMichael = (Function.Call(Hash.IS_PED_MODEL, playerPed, Function.Call(Hash.GET_HASH_KEY, "player_zero"));
+            //var isMichael = (Function.Call(Hash.IS_PED_MODEL, playerPed, 0x5534A626);
+            //if (Function.Call(Hash.IS_PED_MODEL, playerPed, 0x5534A626)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 5, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 5, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 1, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 5, 0, 0); //Shoes
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 5, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 26, 0, false); //Hats
+            }
         }
         public static void UnequipJuggernautSuit(Ped ped)
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
+            WeaponCollection weapon = Game.Player.Character.Weapons;
+            Weapon minigun = weapon[WeaponHash.Minigun];
+            //if (minigun.InfiniteAmmo)
+            {
+                minigun.Ammo = 0;
+                weapon.Remove(minigun);
+            }
             isWearingJuggernautSuit = false;
             playerPed.MaxHealth = 200;
             playerPed.Health = 200;
@@ -152,7 +173,7 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
-            JuggernautPlayer.EquipJuggernautSuit(playerPed);
+            JuggernautScript.EquipJuggernautSuit(playerPed);
             if (Count == 1)
             {
                 Remove();
