@@ -42,11 +42,6 @@ namespace JuggernautMod
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
             menuJuggernaut.Add(itemEquipJuggernautSuit);
-        }
-        public JuggernautPlayer()
-        {
-            Player player = Game.Player;
-            Ped playerPed = Game.Player.Character;
             itemEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
         }
         protected override void OnUpdate(object sender, EventArgs e)
