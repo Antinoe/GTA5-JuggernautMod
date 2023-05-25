@@ -12,18 +12,20 @@ namespace JuggernautMod
 {
     public class BaseClass : Script
     {
+        protected virtual void OnStart() { }
+        protected virtual void OnUpdate(object sender, EventArgs e) { }
+        protected virtual void OnAbort(object sender, EventArgs e) { }
+        protected virtual void OnKeyPressed(object sender, KeyEventArgs e) { }
+        protected virtual void OnKeyReleased(object sender, KeyEventArgs e) { }
         public BaseClass()
         {
+            OnStart();
             Tick += OnUpdate;
             Aborted += OnAbort;
             KeyDown += OnKeyPressed;
             KeyUp += OnKeyReleased;
             Interval = 0;
         }
-        protected virtual void OnUpdate(object sender, EventArgs e) { }
-        protected virtual void OnAbort(object sender, EventArgs e) { }
-        protected virtual void OnKeyPressed(object sender, KeyEventArgs e) { }
-        protected virtual void OnKeyReleased(object sender, KeyEventArgs e) { }
     }
     public class JuggernautPlayer : BaseClass
     {
