@@ -120,12 +120,12 @@ namespace JuggernautMod
             Function.Call(Hash.SET_WEAPON_ANIMATION_OVERRIDE, playerPed, 0x5534A626);
 
             //  Setting Components
-            var isMichael = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "player_zero"));
-            var isFranklin = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "player_one"));
-            var isTrevor = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "player_two"));
-            var isGunman = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "hc_gunman"));
-            var isMPMale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "mp_m_freemode_01"));
-            var isMPFemale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "mp_f_freemode_01"));
+            var isMichael = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("player_zero"));
+            var isFranklin = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("player_one"));
+            var isTrevor = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("player_two"));
+            var isGunman = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("hc_gunman"));
+            var isMPMale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("mp_m_freemode_01"));
+            var isMPFemale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("mp_f_freemode_01"));
             //  Might use this for a bath/shower script in the future.
             //Function.Call(Hash.SET_PED_WETNESS_HEIGHT, playerPed, 1.0f);
             if (isMichael)
@@ -138,6 +138,80 @@ namespace JuggernautMod
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
                 Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 26, 0, false); //Hats
+            }
+            if (isFranklin)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 20, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 12, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 1, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 7, 0, 0); //Shoes
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 0, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 3, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 8, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, 0, 0, 0); //Shirt Overlay
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 18, 0, false); //Hats
+            }
+            if (isTrevor)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 2, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 2, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 1, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 2, 0, 0); //Shoes
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 2, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 24, 0, false); //Hats
+            }
+            if (isGunman)
+            {
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 6, 0, 0); //Head
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 1, 0, 0); //Beard
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 1, 0, 0); //Hair
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 1, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 1, 0, 0); //Lower
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 1, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 1, 0, 0); //Shoes
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 2, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 1, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 9, 0, 0); //Bedges
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, 0, 0, 0); //Shirt Overlay
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 5, 0, false); //Hats
+            }
+            if (isMPMale)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 0, 0, 0); //Head
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 104, 25, 0); //Beard
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 57, 0, 0); //Hair
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 31, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 84, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 33, 0, 0); //Shoes
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 7, 0, 1, 0); //Teeth
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 97, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, 186, 0, 0); //Shirt Overlay
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 39, 0, false); //Hats
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 1, 15, 1, false); //Glasses
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 2, 3, 0, false); //Misc
+            }
+            if (isMPFemale)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 0, 0, 0); //Head
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 104, 25, 0); //Beard
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 49, 0, 0); //Hair
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 163, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 86, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 34, 0, 0); //Shoes
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 7, 0, 1, 0); //Teeth
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 105, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, 188, 0, 0); //Shirt Overlay
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 0, 38, 0, false); //Hats
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 1, 25, 6, false); //Glasses
+                Function.Call(Hash.SET_PED_PROP_INDEX, playerPed, 2, 0, 0, false); //Misc
             }
         }
         public static void UnequipJuggernautSuit(Ped ped)
