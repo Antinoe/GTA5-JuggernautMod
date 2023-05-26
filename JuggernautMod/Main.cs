@@ -40,11 +40,13 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
+            var Inventory = Companion.Inventories.Current;
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
             menuJuggernaut.Add(optionEquipJuggernautSuit);
             menuJuggernaut.Add(optionOnlyMinigun);
             optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
+            //Inventory.Add(JuggernautSuit);
         }
         protected override void OnUpdate(object sender, EventArgs e)
         {
@@ -79,8 +81,6 @@ namespace JuggernautMod
             //if (e.KeyCode == Keys.LShiftKey && e.KeyCode == Keys.OemPeriod)
             if (e.KeyCode == Keys.OemPeriod)
             {
-                //Item item = Companion.Inventories.GetRandomItem();
-                //Companion.Inventories.Current.Add(item);
                 menuJuggernaut.Visible = true;
             }
         }
@@ -181,7 +181,7 @@ namespace JuggernautMod
             {
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 0, 0, 0); //Head
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 104, 25, 0); //Beard
-                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 57, 0, 0); //Hair
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 57, 0, 0); //Hair
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 31, 0, 0); //Upper
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 84, 0, 0); //Lower
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
@@ -199,7 +199,7 @@ namespace JuggernautMod
             {
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 0, 0, 0); //Head
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 104, 25, 0); //Beard
-                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 49, 0, 0); //Hair
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 49, 0, 0); //Hair
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 163, 0, 0); //Upper
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 86, 0, 0); //Lower
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
@@ -233,6 +233,62 @@ namespace JuggernautMod
             Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, playerPed, 1.0f);
             Function.Call(Hash.RESET_PED_STRAFE_CLIPSET, playerPed);
             Function.Call(Hash.SET_WEAPON_ANIMATION_OVERRIDE, playerPed, 0x0);
+
+            //  Setting Components
+            var isMichael = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("player_zero"));
+            var isFranklin = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("player_one"));
+            var isTrevor = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("player_two"));
+            var isGunman = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("hc_gunman"));
+            var isMPMale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("mp_m_freemode_01"));
+            var isMPFemale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Game.GenerateHash("mp_f_freemode_01"));
+            if (isFranklin)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 26, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 18, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 5, 0, 0); //Shoes
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, 0, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, 0, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 8, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, 0, 0, 0); //Shirt Overlay
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 0); //Hats
+            }
+            if (isMPMale)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 0, 0, 0); //Head
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 0, 0, 0); //Beard
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 0, 0, 0); //Hair
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 15, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 61, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 34, 0, 0); //Shoes
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 7, 0, 1, 0); //Teeth
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, -1, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, -1, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, -1, 0, 0); //Shirt Overlay
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 0); //Hats
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 1); //Glasses
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 2); //Misc
+            }
+            if (isMPFemale)
+            {
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 0, 0, 0, 0); //Head
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 1, 0, 0, 0); //Beard
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 2, 0, 0, 0); //Hair
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 15, 0, 0); //Upper
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 62, 0, 0); //Lower
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 5, 0, 0, 0); //Hands
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 6, 35, 0, 0); //Shoes
+                //Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 7, 0, 1, 0); //Teeth
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 8, -1, 0, 0); //Accessory 0
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 9, -1, 0, 0); //Accessory 1
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 10, 0, 0, 0); //Bedges
+                Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 11, 5, 0, 0); //Shirt Overlay
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 0); //Hats
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 1); //Glasses
+                Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 2); //Misc
+            }
         }
         protected override void OnAbort(object sender, EventArgs e)
         {
@@ -241,15 +297,15 @@ namespace JuggernautMod
             UnequipJuggernautSuit(playerPed);
         }
     }
-    public abstract class JuggernautSuit : StackableItem
+    public class JuggernautSuit : StackableItem
     {
         public override string Name => "Juggernaut Suit";
         public override ScaledTexture Icon => new ScaledTexture("", "");
         public JuggernautSuit()
         {
-            Used += UseItem;
+            Used += OnUseItem;
         }
-        private void UseItem(object sender, EventArgs e)
+        private void OnUseItem(object sender, EventArgs e)
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
