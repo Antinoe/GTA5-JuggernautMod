@@ -120,9 +120,15 @@ namespace JuggernautMod
             Function.Call(Hash.SET_WEAPON_ANIMATION_OVERRIDE, playerPed, 0x5534A626);
 
             //  Setting Components
-            //var isMichael = (Function.Call(Hash.IS_PED_MODEL, playerPed, Function.Call(Hash.GET_HASH_KEY, "player_zero"));
-            //var isMichael = (Function.Call(Hash.IS_PED_MODEL, playerPed, 0x5534A626);
-            //if (Function.Call(Hash.IS_PED_MODEL, playerPed, 0x5534A626)
+            var isMichael = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "player_zero"));
+            var isFranklin = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "player_one"));
+            var isTrevor = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "player_two"));
+            var isGunman = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "hc_gunman"));
+            var isMPMale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "mp_m_freemode_01"));
+            var isMPFemale = Function.Call<bool>(Hash.IS_PED_MODEL, playerPed, Function.Call<bool>(Hash.GET_HASH_KEY, "mp_f_freemode_01"));
+            //  Might use this for a bath/shower script in the future.
+            //Function.Call(Hash.SET_PED_WETNESS_HEIGHT, playerPed, 1.0f);
+            if (isMichael)
             {
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 3, 5, 0, 0); //Upper
                 Function.Call(Hash.SET_PED_COMPONENT_VARIATION, playerPed, 4, 5, 0, 0); //Lower
