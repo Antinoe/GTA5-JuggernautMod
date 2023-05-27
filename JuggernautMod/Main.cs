@@ -33,8 +33,13 @@ namespace JuggernautMod
         public static bool isWearingJuggernautSuit;
         private readonly ObjectPool pool = new ObjectPool();
         readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
-        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");NativeCheckboxItem checkboxItem = new NativeCheckboxItem("Checkbox Item", "This is a NativeCheckboxItem that contains a checkbox that can be turned on and off.", true);
-        NativeCheckboxItem optionOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "Toggle this on to force the Minigun to be used whenever wearing the suit.", true);
+        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
+        NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.", true);
+        NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
+        NativeCheckboxItem optionOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "If true, only the Minigun can be used when wearing the suit. The Weapon Wheel will also be disabled.", false);
+        NativeCheckboxItem optionInfiniteAmmoMinigun = new NativeCheckboxItem("Infinite Ammo for Minigun?", "If true, the Minigun will never run out of ammo.", false);
+        public int ammoRegenerationCooldownMinigun = 15;
+        public int ammoRegenerationCooldownGrenadeLauncher = 1800;
 
         protected override void OnStart()
         {
@@ -44,7 +49,10 @@ namespace JuggernautMod
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
             menuJuggernaut.Add(optionEquipJuggernautSuit);
+            menuJuggernaut.Add(optionAmmoRegenerationMinigun);
+            menuJuggernaut.Add(optionAmmoRegenerationGrenadeLauncher);
             menuJuggernaut.Add(optionOnlyMinigun);
+            menuJuggernaut.Add(optionInfiniteAmmoMinigun);
             optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
             //Inventory.Add(JuggernautSuit);
         }
@@ -56,6 +64,9 @@ namespace JuggernautMod
             {
                 Player player = Game.Player;
                 Ped playerPed = Game.Player.Character;
+                WeaponCollection weapon = Game.Player.Character.Weapons;
+                Weapon minigun = weapon[WeaponHash.Minigun];
+                Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
                 Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
                 Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
                 Game.DisableControlThisFrame(Control.Jump);
@@ -65,6 +76,45 @@ namespace JuggernautMod
                 if (optionOnlyMinigun.Checked)
                 {
                     Game.DisableControlThisFrame(Control.SelectWeapon);
+                }
+                if (optionAmmoRegenerationMinigun.Checked && weapon.HasWeapon(WeaponHash.Minigun))
+                {
+                    if (ammoRegenerationCooldownMinigun > 0)
+                    {
+                        ammoRegenerationCooldownMinigun--;
+                    }
+                    else
+                    {
+                        minigun.Ammo += 10;
+                        ammoRegenerationCooldownMinigun = 15;
+                    }
+                }
+                if (optionAmmoRegenerationGrenadeLauncher.Checked && weapon.HasWeapon(WeaponHash.GrenadeLauncher))
+                {
+                    if (ammoRegenerationCooldownGrenadeLauncher > 0)
+                    {
+                        ammoRegenerationCooldownGrenadeLauncher--;
+                    }
+                    else
+                    {
+                        grenadeLauncher.Ammo += 1;
+                        ammoRegenerationCooldownGrenadeLauncher = 1800;
+                    }
+                }
+                //  I could probably simplify these next 2 conditions..
+                if (optionInfiniteAmmoMinigun.Checked)
+                {
+                    if (weapon.HasWeapon(WeaponHash.Minigun))
+                    {
+                        minigun.InfiniteAmmo = true;
+                    }
+                }
+                if (!optionInfiniteAmmoMinigun.Checked)
+                {
+                    if (weapon.HasWeapon(WeaponHash.Minigun))
+                    {
+                        minigun.InfiniteAmmo = false;
+                    }
                 }
                 if (playerPed.Health <= 200)
                 {
@@ -108,7 +158,6 @@ namespace JuggernautMod
             WeaponCollection weapon = Game.Player.Character.Weapons;
             Weapon minigun = weapon.HasWeapon(WeaponHash.Minigun) ? weapon[WeaponHash.Minigun] : weapon.Give(WeaponHash.Minigun, 0, true, true);
             minigun.Ammo += 9999;
-            minigun.InfiniteAmmo = true;
             isWearingJuggernautSuit = true;
             playerPed.MaxHealth = 2000;
             playerPed.Health = 2000;
@@ -220,10 +269,16 @@ namespace JuggernautMod
             Ped playerPed = Game.Player.Character;
             WeaponCollection weapon = Game.Player.Character.Weapons;
             Weapon minigun = weapon[WeaponHash.Minigun];
-            //if (minigun.InfiniteAmmo)
+            Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
+            if (weapon.HasWeapon(WeaponHash.Minigun))
             {
                 minigun.Ammo = 0;
                 weapon.Remove(minigun);
+            }
+            if (weapon.HasWeapon(WeaponHash.GrenadeLauncher))
+            {
+                grenadeLauncher.Ammo = 0;
+                weapon.Remove(grenadeLauncher);
             }
             isWearingJuggernautSuit = false;
             playerPed.MaxHealth = 200;
