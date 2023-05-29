@@ -77,7 +77,7 @@ namespace JuggernautMod
                 {
                     Game.DisableControlThisFrame(Control.SelectWeapon);
                 }
-                if (optionAmmoRegenerationMinigun.Checked && weapon.HasWeapon(WeaponHash.Minigun))
+                if (optionAmmoRegenerationMinigun.Checked && weapon.HasWeapon(WeaponHash.Minigun) && minigun.Ammo < 9999)
                 {
                     if (ammoRegenerationCooldownMinigun > 0)
                     {
@@ -85,11 +85,11 @@ namespace JuggernautMod
                     }
                     else
                     {
-                        minigun.Ammo += 10;
+                        minigun.Ammo++;
                         ammoRegenerationCooldownMinigun = 15;
                     }
                 }
-                if (optionAmmoRegenerationGrenadeLauncher.Checked && weapon.HasWeapon(WeaponHash.GrenadeLauncher))
+                if (optionAmmoRegenerationGrenadeLauncher.Checked && weapon.HasWeapon(WeaponHash.GrenadeLauncher) && grenadeLauncher.Ammo < 9999)
                 {
                     if (ammoRegenerationCooldownGrenadeLauncher > 0)
                     {
