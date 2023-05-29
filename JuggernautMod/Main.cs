@@ -40,6 +40,10 @@ namespace JuggernautMod
         NativeCheckboxItem optionInfiniteAmmoMinigun = new NativeCheckboxItem("Infinite Ammo for Minigun?", "If true, the Minigun will never run out of ammo.", false);
         NativeCheckboxItem optionRegenerationHealth = new NativeCheckboxItem("Health Regeneration?", "If true, your Health will regenerate when wearing the suit.", true);
         NativeCheckboxItem optionRegenerationArmor = new NativeCheckboxItem("Armor Regeneration?", "If true, your Armor will regenerate when wearing the suit.", true);
+        NativeCheckboxItem optionCanJump = new NativeCheckboxItem("Can Jump?", "If false, you cannot Jump while wearing the suit.", false);
+        NativeCheckboxItem optionCanEnterVehicles = new NativeCheckboxItem("Can Enter Vehicles?", "If false, you cannot Enter Vehicles while wearing the suit.", false);
+        NativeCheckboxItem optionCanTakeCover = new NativeCheckboxItem("Can Take Cover?", "If false, you cannot Take Cover while wearing the suit.", false);
+        NativeCheckboxItem optionCanSneak = new NativeCheckboxItem("Can Sneak?", "If false, you cannot Sneak while wearing the suit.", false);
         public int ammoRegenerationCooldownMinigun = 15;
         public int ammoRegenerationCooldownGrenadeLauncher = 1800;
         public int regenerationCooldownHealth = 15;
@@ -59,6 +63,10 @@ namespace JuggernautMod
             menuJuggernaut.Add(optionInfiniteAmmoMinigun);
             menuJuggernaut.Add(optionRegenerationHealth);
             menuJuggernaut.Add(optionRegenerationArmor);
+            menuJuggernaut.Add(optionCanJump);
+            menuJuggernaut.Add(optionCanEnterVehicles);
+            menuJuggernaut.Add(optionCanTakeCover);
+            menuJuggernaut.Add(optionCanSneak);
             optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
             //Inventory.Add(JuggernautSuit);
         }
@@ -75,10 +83,10 @@ namespace JuggernautMod
                 Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
                 Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
                 Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
-                Game.DisableControlThisFrame(Control.Jump);
-                Game.DisableControlThisFrame(Control.Enter);
-                Game.DisableControlThisFrame(Control.Cover);
-                Game.DisableControlThisFrame(Control.Duck);
+                if (optionCanJump.Checked) { Game.DisableControlThisFrame(Control.Jump); }
+                if (optionCanEnterVehicles.Checked) { Game.DisableControlThisFrame(Control.Enter); }
+                if (optionCanTakeCover.Checked) { Game.DisableControlThisFrame(Control.Cover); }
+                if (optionCanSneak.Checked) { Game.DisableControlThisFrame(Control.Duck); }
                 if (optionOnlyMinigun.Checked)
                 {
                     Game.DisableControlThisFrame(Control.SelectWeapon);
