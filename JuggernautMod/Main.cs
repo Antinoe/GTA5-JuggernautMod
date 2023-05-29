@@ -38,8 +38,12 @@ namespace JuggernautMod
         NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
         NativeCheckboxItem optionOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "If true, only the Minigun can be used when wearing the suit. The Weapon Wheel will also be disabled.", false);
         NativeCheckboxItem optionInfiniteAmmoMinigun = new NativeCheckboxItem("Infinite Ammo for Minigun?", "If true, the Minigun will never run out of ammo.", false);
+        NativeCheckboxItem optionRegenerationHealth = new NativeCheckboxItem("Health Regeneration?", "If true, your Health will regenerate when wearing the suit.", true);
+        NativeCheckboxItem optionRegenerationArmor = new NativeCheckboxItem("Armor Regeneration?", "If true, your Armor will regenerate when wearing the suit.", true);
         public int ammoRegenerationCooldownMinigun = 15;
         public int ammoRegenerationCooldownGrenadeLauncher = 1800;
+        public int regenerationCooldownHealth = 15;
+        public int regenerationCooldownArmor = 15;
 
         protected override void OnStart()
         {
@@ -53,6 +57,8 @@ namespace JuggernautMod
             menuJuggernaut.Add(optionAmmoRegenerationGrenadeLauncher);
             menuJuggernaut.Add(optionOnlyMinigun);
             menuJuggernaut.Add(optionInfiniteAmmoMinigun);
+            menuJuggernaut.Add(optionRegenerationHealth);
+            menuJuggernaut.Add(optionRegenerationArmor);
             optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
             //Inventory.Add(JuggernautSuit);
         }
@@ -76,6 +82,30 @@ namespace JuggernautMod
                 if (optionOnlyMinigun.Checked)
                 {
                     Game.DisableControlThisFrame(Control.SelectWeapon);
+                }
+                if (optionRegenerationHealth.Checked && playerPed.Health < 2000)
+                {
+                    if (regenerationCooldownHealth > 0)
+                    {
+                        regenerationCooldownHealth--;
+                    }
+                    else
+                    {
+                        playerPed.Health++;
+                        regenerationCooldownHealth = 15;
+                    }
+                }
+                if (optionRegenerationArmor.Checked && playerPed.Armor < 200)
+                {
+                    if (regenerationCooldownArmor > 0)
+                    {
+                        regenerationCooldownArmor--;
+                    }
+                    else
+                    {
+                        playerPed.Armor++;
+                        regenerationCooldownArmor = 15;
+                    }
                 }
                 if (optionAmmoRegenerationMinigun.Checked && weapon.HasWeapon(WeaponHash.Minigun) && minigun.Ammo < 9999)
                 {
