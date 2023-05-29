@@ -83,10 +83,10 @@ namespace JuggernautMod
                 Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
                 Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
                 Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
-                if (optionCanJump.Checked) { Game.DisableControlThisFrame(Control.Jump); }
-                if (optionCanEnterVehicles.Checked) { Game.DisableControlThisFrame(Control.Enter); }
-                if (optionCanTakeCover.Checked) { Game.DisableControlThisFrame(Control.Cover); }
-                if (optionCanSneak.Checked) { Game.DisableControlThisFrame(Control.Duck); }
+                if (!optionCanJump.Checked) { Game.DisableControlThisFrame(Control.Jump); }
+                if (!optionCanEnterVehicles.Checked) { Game.DisableControlThisFrame(Control.Enter); }
+                if (!optionCanTakeCover.Checked) { Game.DisableControlThisFrame(Control.Cover); }
+                if (!optionCanSneak.Checked) { Game.DisableControlThisFrame(Control.Duck); }
                 if (optionOnlyMinigun.Checked)
                 {
                     Game.DisableControlThisFrame(Control.SelectWeapon);
