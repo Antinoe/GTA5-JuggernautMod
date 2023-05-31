@@ -68,7 +68,10 @@ namespace JuggernautMod
             menuJuggernaut.Add(optionCanTakeCover);
             menuJuggernaut.Add(optionCanSneak);
             optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
-            //Inventory.Add(JuggernautSuit);
+            //  Better way of declaring the variable 2 lines below.
+            //JuggernautSuit itemJuggernautSuit;
+            JuggernautSuit itemJuggernautSuit = new JuggernautSuit();
+            Inventory.Add(itemJuggernautSuit);
         }
         protected override void OnUpdate(object sender, EventArgs e)
         {
