@@ -36,6 +36,7 @@ namespace JuggernautMod
         NativeItem optionEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
         NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.\nDisabled by default because there is a bug with the Weapon Wheel.", false);
         NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
+        NativeCheckboxItem optionAmmoRegenerationPipeBomb = new NativeCheckboxItem("Pipe Bomb Regeneration?", "If true, Pipe Bombs will regenerate with time.", true);
         NativeCheckboxItem optionOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "If true, only the Minigun can be used when wearing the suit. The Weapon Wheel will also be disabled.", false);
         NativeCheckboxItem optionInfiniteAmmoMinigun = new NativeCheckboxItem("Infinite Ammo for Minigun?", "If true, the Minigun will never run out of ammo.", false);
         NativeCheckboxItem optionRegenerationHealth = new NativeCheckboxItem("Health Regeneration?", "If true, your Health will regenerate when wearing the suit.", true);
@@ -46,6 +47,7 @@ namespace JuggernautMod
         NativeCheckboxItem optionCanSneak = new NativeCheckboxItem("Can Sneak?", "If false, you cannot Sneak while wearing the suit.", false);
         public int ammoRegenerationCooldownMinigun = 15;
         public int ammoRegenerationCooldownGrenadeLauncher = 1800;
+        public int ammoRegenerationCooldownPipeBomb = 600;
         public int regenerationCooldownHealth = 15;
         public int regenerationCooldownArmor = 15;
 
@@ -59,6 +61,7 @@ namespace JuggernautMod
             menuJuggernaut.Add(optionEquipJuggernautSuit);
             menuJuggernaut.Add(optionAmmoRegenerationMinigun);
             menuJuggernaut.Add(optionAmmoRegenerationGrenadeLauncher);
+            menuJuggernaut.Add(optionAmmoRegenerationPipeBomb);
             menuJuggernaut.Add(optionOnlyMinigun);
             menuJuggernaut.Add(optionInfiniteAmmoMinigun);
             menuJuggernaut.Add(optionRegenerationHealth);
@@ -85,6 +88,7 @@ namespace JuggernautMod
                 WeaponCollection weapon = Game.Player.Character.Weapons;
                 Weapon minigun = weapon[WeaponHash.Minigun];
                 Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
+                Weapon pipeBomb = weapon[WeaponHash.PipeBomb];
                 Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
                 Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
                 if (!optionCanJump.Checked) { Game.DisableControlThisFrame(Control.Jump); }
@@ -142,6 +146,22 @@ namespace JuggernautMod
                         grenadeLauncher.Ammo += 1;
                         ammoRegenerationCooldownGrenadeLauncher = 1800;
                     }
+                }
+                if (optionAmmoRegenerationPipeBomb.Checked && weapon.HasWeapon(WeaponHash.PipeBomb) && pipeBomb.Ammo < 10)
+                {
+                    if (ammoRegenerationCooldownPipeBomb > 0)
+                    {
+                        ammoRegenerationCooldownPipeBomb--;
+                    }
+                    else
+                    {
+                        pipeBomb.Ammo += 1;
+                        ammoRegenerationCooldownPipeBomb = 600;
+                    }
+                }
+                if (optionAmmoRegenerationPipeBomb.Checked && !weapon.HasWeapon(WeaponHash.PipeBomb))
+                {
+                    weapon.Give(WeaponHash.PipeBomb, 1, false, true);
                 }
                 //  I could probably simplify these next 2 conditions..
                 if (optionInfiniteAmmoMinigun.Checked)
