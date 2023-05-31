@@ -32,7 +32,9 @@ namespace JuggernautMod
     {
         public static bool isWearingJuggernautSuit;
         private readonly ObjectPool pool = new ObjectPool();
-        readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
+        private static readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
+        private static readonly NativeMenu subMenuSuitOptions = new NativeMenu("Suit Options", "Juggernaut Suit Options", "Configure the suit.");
+        private static readonly NativeSubmenuItem subMenuSuitOptionsOpener = menuJuggernaut.AddSubMenu(subMenuSuitOptions);
         NativeItem optionEquipJuggernautSuit = new NativeItem("Equip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
         NativeItem optionUnequipJuggernautSuit = new NativeItem("Unequip Juggernaut Suit", "Remove the suit?", "");
         NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.\nDisabled by default because there is a bug with the Weapon Wheel.", false);
@@ -59,19 +61,20 @@ namespace JuggernautMod
             var Inventory = Companion.Inventories.Current;
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
+            pool.Add(subMenuSuitOptions);
             menuJuggernaut.Add(optionEquipJuggernautSuit);
             menuJuggernaut.Add(optionUnequipJuggernautSuit);
-            menuJuggernaut.Add(optionAmmoRegenerationMinigun);
-            menuJuggernaut.Add(optionAmmoRegenerationGrenadeLauncher);
-            menuJuggernaut.Add(optionAmmoRegenerationPipeBomb);
-            menuJuggernaut.Add(optionOnlyMinigun);
-            menuJuggernaut.Add(optionInfiniteAmmoMinigun);
-            menuJuggernaut.Add(optionRegenerationHealth);
-            menuJuggernaut.Add(optionRegenerationArmor);
-            menuJuggernaut.Add(optionCanJump);
-            menuJuggernaut.Add(optionCanEnterVehicles);
-            menuJuggernaut.Add(optionCanTakeCover);
-            menuJuggernaut.Add(optionCanSneak);
+            subMenuSuitOptions.Add(optionAmmoRegenerationMinigun);
+            subMenuSuitOptions.Add(optionAmmoRegenerationGrenadeLauncher);
+            subMenuSuitOptions.Add(optionAmmoRegenerationPipeBomb);
+            subMenuSuitOptions.Add(optionOnlyMinigun);
+            subMenuSuitOptions.Add(optionInfiniteAmmoMinigun);
+            subMenuSuitOptions.Add(optionRegenerationHealth);
+            subMenuSuitOptions.Add(optionRegenerationArmor);
+            subMenuSuitOptions.Add(optionCanJump);
+            subMenuSuitOptions.Add(optionCanEnterVehicles);
+            subMenuSuitOptions.Add(optionCanTakeCover);
+            subMenuSuitOptions.Add(optionCanSneak);
             optionEquipJuggernautSuit.Activated += (sender, e) => TryToEquipJuggernautSuit(playerPed);
             optionUnequipJuggernautSuit.Activated += (sender, e) => TryToUnequipJuggernautSuit(playerPed);
             //  Better way of declaring the variable 2 lines below.
