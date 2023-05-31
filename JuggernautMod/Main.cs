@@ -70,8 +70,9 @@ namespace JuggernautMod
             optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
             //  Better way of declaring the variable 2 lines below.
             //JuggernautSuit itemJuggernautSuit;
-            JuggernautSuit itemJuggernautSuit = new JuggernautSuit();
-            Inventory.Add(itemJuggernautSuit);
+            //  Commenting this out for now because it crashes the script.
+            /*JuggernautSuit itemJuggernautSuit = new JuggernautSuit();
+            Inventory.Add(itemJuggernautSuit);*/
         }
         protected override void OnUpdate(object sender, EventArgs e)
         {
