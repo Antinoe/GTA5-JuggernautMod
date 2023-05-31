@@ -34,14 +34,14 @@ namespace JuggernautMod
         private readonly ObjectPool pool = new ObjectPool();
         readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
         NativeItem optionEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
-        NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.", true);
+        NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.\nDisabled by default because there is a bug with the Weapon Wheel.", false);
         NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
         NativeCheckboxItem optionOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "If true, only the Minigun can be used when wearing the suit. The Weapon Wheel will also be disabled.", false);
         NativeCheckboxItem optionInfiniteAmmoMinigun = new NativeCheckboxItem("Infinite Ammo for Minigun?", "If true, the Minigun will never run out of ammo.", false);
         NativeCheckboxItem optionRegenerationHealth = new NativeCheckboxItem("Health Regeneration?", "If true, your Health will regenerate when wearing the suit.", true);
         NativeCheckboxItem optionRegenerationArmor = new NativeCheckboxItem("Armor Regeneration?", "If true, your Armor will regenerate when wearing the suit.", true);
         NativeCheckboxItem optionCanJump = new NativeCheckboxItem("Can Jump?", "If false, you cannot Jump while wearing the suit.", false);
-        NativeCheckboxItem optionCanEnterVehicles = new NativeCheckboxItem("Can Enter Vehicles?", "If false, you cannot Enter Vehicles while wearing the suit.", false);
+        NativeCheckboxItem optionCanEnterVehicles = new NativeCheckboxItem("Can Enter Vehicles?", "If false, you cannot Enter Vehicles while wearing the suit.", true);
         NativeCheckboxItem optionCanTakeCover = new NativeCheckboxItem("Can Take Cover?", "If false, you cannot Take Cover while wearing the suit.", false);
         NativeCheckboxItem optionCanSneak = new NativeCheckboxItem("Can Sneak?", "If false, you cannot Sneak while wearing the suit.", false);
         public int ammoRegenerationCooldownMinigun = 15;
