@@ -33,7 +33,8 @@ namespace JuggernautMod
         public static bool isWearingJuggernautSuit;
         private readonly ObjectPool pool = new ObjectPool();
         readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
-        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip/Unequip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
+        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
+        NativeItem optionUnequipJuggernautSuit = new NativeItem("Unequip Juggernaut Suit", "Remove the suit?", "");
         NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.\nDisabled by default because there is a bug with the Weapon Wheel.", false);
         NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
         NativeCheckboxItem optionAmmoRegenerationPipeBomb = new NativeCheckboxItem("Pipe Bomb Regeneration?", "If true, Pipe Bombs will regenerate with time.", true);
@@ -59,6 +60,7 @@ namespace JuggernautMod
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
             menuJuggernaut.Add(optionEquipJuggernautSuit);
+            menuJuggernaut.Add(optionUnequipJuggernautSuit);
             menuJuggernaut.Add(optionAmmoRegenerationMinigun);
             menuJuggernaut.Add(optionAmmoRegenerationGrenadeLauncher);
             menuJuggernaut.Add(optionAmmoRegenerationPipeBomb);
@@ -70,7 +72,8 @@ namespace JuggernautMod
             menuJuggernaut.Add(optionCanEnterVehicles);
             menuJuggernaut.Add(optionCanTakeCover);
             menuJuggernaut.Add(optionCanSneak);
-            optionEquipJuggernautSuit.Activated += (sender, e) => ToggleJuggernautSuit(playerPed);
+            optionEquipJuggernautSuit.Activated += (sender, e) => TryToEquipJuggernautSuit(playerPed);
+            optionUnequipJuggernautSuit.Activated += (sender, e) => TryToUnequipJuggernautSuit(playerPed);
             //  Better way of declaring the variable 2 lines below.
             //JuggernautSuit itemJuggernautSuit;
             //  Commenting this out for now because it crashes the script.
@@ -196,6 +199,39 @@ namespace JuggernautMod
                 menuJuggernaut.Visible = true;
             }
         }
+        public virtual bool CanEquipJuggernautSuit(Ped ped)
+        {
+            return true;
+        }
+        protected void TryToEquipJuggernautSuit(Ped ped)
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            if (!isWearingJuggernautSuit)
+            {
+                if (CanEquipJuggernautSuit(playerPed))
+                {
+                    EquipJuggernautSuit(playerPed);
+                }
+            }
+            else
+            {
+                //  Nothing.
+            }
+        }
+        protected void TryToUnequipJuggernautSuit(Ped ped)
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            if (isWearingJuggernautSuit)
+            {
+                UnequipJuggernautSuit(playerPed);
+            }
+            else
+            {
+                //  Nothing.
+            }
+        }
         protected void ToggleJuggernautSuit(Ped ped)
         {
             Player player = Game.Player;
@@ -208,10 +244,6 @@ namespace JuggernautMod
                 }
             }
             else { UnequipJuggernautSuit(playerPed); }
-        }
-        public virtual bool CanEquipJuggernautSuit(Ped ped)
-        {
-            return true;
         }
         public static void EquipJuggernautSuit(Ped ped)
         {
