@@ -219,7 +219,11 @@ namespace JuggernautMod
             Ped playerPed = Game.Player.Character;
             WeaponCollection weapon = Game.Player.Character.Weapons;
             Weapon minigun = weapon.HasWeapon(WeaponHash.Minigun) ? weapon[WeaponHash.Minigun] : weapon.Give(WeaponHash.Minigun, 0, true, true);
-            minigun.Ammo += 9999;
+            minigun.Ammo += 5000;
+            Weapon grenadeLauncher = weapon.HasWeapon(WeaponHash.GrenadeLauncher) ? weapon[WeaponHash.GrenadeLauncher] : weapon.Give(WeaponHash.GrenadeLauncher, 0, true, true);
+            grenadeLauncher.Ammo += 10;
+            Weapon combatMG = weapon.HasWeapon(WeaponHash.CombatMG) ? weapon[WeaponHash.CombatMG] : weapon.Give(WeaponHash.CombatMG, 0, true, true);
+            combatMG.Ammo += 400;
             isWearingJuggernautSuit = true;
             playerPed.MaxHealth = 2000;
             playerPed.Health = 2000;
@@ -332,6 +336,8 @@ namespace JuggernautMod
             WeaponCollection weapon = Game.Player.Character.Weapons;
             Weapon minigun = weapon[WeaponHash.Minigun];
             Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
+            Weapon pipeBomb = weapon[WeaponHash.PipeBomb];
+            Weapon combatMG = weapon[WeaponHash.CombatMG];
             if (weapon.HasWeapon(WeaponHash.Minigun))
             {
                 minigun.Ammo = 0;
@@ -341,6 +347,17 @@ namespace JuggernautMod
             {
                 grenadeLauncher.Ammo = 0;
                 weapon.Remove(grenadeLauncher);
+            }
+            if (weapon.HasWeapon(WeaponHash.PipeBomb))
+            {
+                pipeBomb.Ammo = 0;
+                //  This line will probably throw an error..
+                //weapon.Remove(pipeBomb);
+            }
+            if (weapon.HasWeapon(WeaponHash.CombatMG))
+            {
+                combatMG.Ammo = 0;
+                weapon.Remove(combatMG);
             }
             isWearingJuggernautSuit = false;
             playerPed.MaxHealth = 200;
