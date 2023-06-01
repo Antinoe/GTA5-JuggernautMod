@@ -14,15 +14,15 @@ namespace JuggernautMod
     public class BaseClass : Script
     {
         protected virtual void OnStart() { }
-        protected virtual void OnUpdate(object sender, EventArgs e) { }
-        protected virtual void OnAbort(object sender, EventArgs e) { }
+        protected virtual void OnUpdate() { }
+        protected virtual void OnAbort() { }
         protected virtual void OnKeyPressed(object sender, KeyEventArgs e) { }
         protected virtual void OnKeyReleased(object sender, KeyEventArgs e) { }
         public BaseClass()
         {
             OnStart();
-            Tick += OnUpdate;
-            Aborted += OnAbort;
+            Tick += (sender, e) => OnUpdate();
+            Aborted += (sender, e) => OnAbort();
             KeyDown += OnKeyPressed;
             KeyUp += OnKeyReleased;
             Interval = 0;
@@ -78,7 +78,7 @@ namespace JuggernautMod
             optionEquipJuggernautSuit.Activated += (sender, e) => GiveJuggernautSuit(playerPed);
             optionUnequipJuggernautSuit.Activated += (sender, e) => TryToUnequipJuggernautSuit(playerPed);
         }
-        protected override void OnUpdate(object sender, EventArgs e)
+        protected override void OnUpdate()
         {
             //  This runs the UI stuff created within the class.
             pool.Process();
@@ -510,7 +510,7 @@ namespace JuggernautMod
                 Function.Call(Hash.CLEAR_ALL_PED_PROPS, playerPed, 2); //Misc
             }
         }
-        protected override void OnAbort(object sender, EventArgs e)
+        protected override void OnAbort()
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
