@@ -35,7 +35,7 @@ namespace JuggernautMod
         private static readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
         private static readonly NativeMenu subMenuSuitOptions = new NativeMenu("Suit Options", "Juggernaut Suit Options", "Configure the suit.");
         private static readonly NativeSubmenuItem subMenuSuitOptionsOpener = menuJuggernaut.AddSubMenu(subMenuSuitOptions);
-        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many protective Para-Aramid Fiber Layers underneath.", "FREE");
+        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.", "FREE");
         NativeItem optionUnequipJuggernautSuit = new NativeItem("Unequip Juggernaut Suit", "Remove the suit?", "");
         NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.\nDisabled by default because there is a bug with the Weapon Wheel.", false);
         NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
@@ -75,13 +75,8 @@ namespace JuggernautMod
             subMenuSuitOptions.Add(optionCanEnterVehicles);
             subMenuSuitOptions.Add(optionCanTakeCover);
             subMenuSuitOptions.Add(optionCanSneak);
-            optionEquipJuggernautSuit.Activated += (sender, e) => TryToEquipJuggernautSuit(playerPed);
+            optionEquipJuggernautSuit.Activated += (sender, e) => GiveJuggernautSuit(playerPed);
             optionUnequipJuggernautSuit.Activated += (sender, e) => TryToUnequipJuggernautSuit(playerPed);
-            //  Better way of declaring the variable 2 lines below.
-            //JuggernautSuit itemJuggernautSuit;
-            //  Commenting this out for now because it crashes the script.
-            /*JuggernautSuit itemJuggernautSuit = new JuggernautSuit();
-            Inventory.Add(itemJuggernautSuit);*/
         }
         protected override void OnUpdate(object sender, EventArgs e)
         {
@@ -192,8 +187,6 @@ namespace JuggernautMod
         }
         protected override void OnKeyPressed(object sender, KeyEventArgs e)
         {
-            Player player = Game.Player;
-            Ped playerPed = Game.Player.Character;
             //if (Game.IsControlPressed(Control.Sprint) && Game.IsControlJustPressed(Control.VehicleNextRadio))
             //if (Game.IsControlPressed(Control.Sprint) && e.KeyCode == Keys.OemPeriod)
             //if (e.KeyCode == Keys.LShiftKey && e.KeyCode == Keys.OemPeriod)
@@ -202,11 +195,27 @@ namespace JuggernautMod
                 menuJuggernaut.Visible = true;
             }
         }
-        public virtual bool CanEquipJuggernautSuit(Ped ped)
+        private void GiveJuggernautSuit(Ped ped)
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            var Inventory = Companion.Inventories.Current;
+            //  Better way of declaring the variable 2 lines below.
+            //JuggernautSuit itemJuggernautSuit;
+            //  Commenting this out for now because it crashes the script.
+            if (Companion.IsReady)
+            {
+                JuggernautSuit itemJuggernautSuit = new JuggernautSuit();
+                Inventory.Add(itemJuggernautSuit);
+            }
+        }
+
+        //  I'll need to fix this later. I want this hook to be overridable by other mod developers, so the fact that it's static instead of virtual is a problem.
+        public static bool CanEquipJuggernautSuit(Ped ped)
         {
             return true;
         }
-        protected void TryToEquipJuggernautSuit(Ped ped)
+        public static void TryToEquipJuggernautSuit(Ped ped)
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
@@ -222,7 +231,7 @@ namespace JuggernautMod
                 //  Nothing.
             }
         }
-        protected void TryToUnequipJuggernautSuit(Ped ped)
+        public static void TryToUnequipJuggernautSuit(Ped ped)
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
@@ -235,7 +244,7 @@ namespace JuggernautMod
                 //  Nothing.
             }
         }
-        protected void ToggleJuggernautSuit(Ped ped)
+        public void ToggleJuggernautSuit(Ped ped)
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
@@ -526,24 +535,22 @@ namespace JuggernautMod
     public class JuggernautSuit : StackableItem
     {
         public override string Name => "Juggernaut Suit";
+        public override string Description => "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.";
         public override ScaledTexture Icon => new ScaledTexture("", "");
         public JuggernautSuit()
         {
-            Used += OnUseItem;
+            //Used += OnUseItem;
+            Used += (sender, e) => OnUseItem();
         }
-        private void OnUseItem(object sender, EventArgs e)
+        private void OnUseItem()
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
-            JuggernautScript.EquipJuggernautSuit(playerPed);
-            if (Count == 1)
-            {
-                Remove();
-            }
-            else
-            {
-                Count -= 1;
-            }
+            JuggernautScript.TryToEquipJuggernautSuit(playerPed);
+            //  Commented out the Count stuff because it isn't working at the moment.
+            //Count--;
+            //if(Count==1){Remove();}
+            //else{Count--;}
         }
     }
 }
