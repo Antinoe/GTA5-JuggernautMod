@@ -506,6 +506,21 @@ namespace JuggernautMod
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
             UnequipJuggernautSuit(playerPed);
+            menuJuggernaut.Remove(optionEquipJuggernautSuit);
+            menuJuggernaut.Remove(optionUnequipJuggernautSuit);
+            subMenuSuitOptions.Remove(optionAmmoRegenerationMinigun);
+            subMenuSuitOptions.Remove(optionAmmoRegenerationGrenadeLauncher);
+            subMenuSuitOptions.Remove(optionAmmoRegenerationPipeBomb);
+            subMenuSuitOptions.Remove(optionOnlyMinigun);
+            subMenuSuitOptions.Remove(optionInfiniteAmmoMinigun);
+            subMenuSuitOptions.Remove(optionRegenerationHealth);
+            subMenuSuitOptions.Remove(optionRegenerationArmor);
+            subMenuSuitOptions.Remove(optionCanJump);
+            subMenuSuitOptions.Remove(optionCanEnterVehicles);
+            subMenuSuitOptions.Remove(optionCanTakeCover);
+            subMenuSuitOptions.Remove(optionCanSneak);
+            pool.Remove(subMenuSuitOptions);
+            pool.Remove(menuJuggernaut);
         }
     }
     public class JuggernautSuit : StackableItem
