@@ -514,7 +514,7 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
-            UnequipJuggernautSuit(playerPed);
+            if (isWearingJuggernautSuit)   {UnequipJuggernautSuit(playerPed);}
             menuJuggernaut.Remove(optionEquipJuggernautSuit);
             menuJuggernaut.Remove(optionUnequipJuggernautSuit);
             subMenuSuitOptions.Remove(optionAmmoRegenerationMinigun);
@@ -537,6 +537,8 @@ namespace JuggernautMod
         public override string Name => "Juggernaut Suit";
         public override string Description => "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.";
         public override ScaledTexture Icon => new ScaledTexture("", "");
+        public override int Maximum => 5;
+        public override int Value => 5000;
         public JuggernautSuit()
         {
             //Used += OnUseItem;
@@ -547,8 +549,9 @@ namespace JuggernautMod
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
             JuggernautScript.TryToEquipJuggernautSuit(playerPed);
-            //  Commented out the Count stuff because it isn't working at the moment.
             //Count--;
+            //Remove();
+            //  Commented out the Count stuff because it isn't working at the moment.
             //if(Count==1){Remove();}
             //else{Count--;}
         }
