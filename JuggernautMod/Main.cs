@@ -548,12 +548,13 @@ namespace JuggernautMod
         {
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
+            bool consumeItem = true;
             JuggernautScript.TryToEquipJuggernautSuit(playerPed);
-            //Count--;
-            //Remove();
-            //  Commented out the Count stuff because it isn't working at the moment.
-            //if(Count==1){Remove();}
-            //else{Count--;}
+            if (consumeItem)
+            {
+                if (Count == 1) { Remove(); }
+                else { Count--; }
+            }
         }
     }
 }
