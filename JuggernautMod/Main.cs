@@ -35,8 +35,14 @@ namespace JuggernautMod
         private static readonly NativeMenu menuJuggernaut = new NativeMenu("Praesidium Armory", "Armor Menu");
         private static readonly NativeMenu subMenuSuitOptions = new NativeMenu("Suit Options", "Juggernaut Suit Options", "Configure the suit.");
         private static readonly NativeSubmenuItem subMenuSuitOptionsOpener = menuJuggernaut.AddSubMenu(subMenuSuitOptions);
-        NativeItem optionEquipJuggernautSuit = new NativeItem("Equip Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.", "FREE");
+        private static readonly NativeMenu subMenuWeaponOptions = new NativeMenu("Weapon Options", "Juggernaut Weapon Options", "Configure the arsenal.");
+        private static readonly NativeSubmenuItem subMenuWeaponOptionsOpener = menuJuggernaut.AddSubMenu(subMenuWeaponOptions);
+        NativeItem optionEquipJuggernautSuit = new NativeItem("Buy Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.", "FREE");
         NativeItem optionUnequipJuggernautSuit = new NativeItem("Unequip Juggernaut Suit", "Remove the suit?", "");
+        static NativeListItem<int> suitHealth = new NativeListItem<int>("Health", "How much Health the Suit has.", 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000);
+        static NativeCheckboxItem optionAllowActionMode = new NativeCheckboxItem("Allow Action Mode?", "If false, you cannot enter Action Mode while in the suit.", false);
+        static NativeCheckboxItem optionAllowBlood = new NativeCheckboxItem("Allow Blood?", "If false, Blood Damage will constantly be cleared while in the suit.", true);
+        static NativeCheckboxItem optionGiveWeapons = new NativeCheckboxItem("Give Weapons?", "If true, you will be given a Combat MG, Minigun and Grenade Launcher.", false);
         NativeCheckboxItem optionAmmoRegenerationMinigun = new NativeCheckboxItem("Minigun Ammo Regeneration?", "If true, the Minigun's ammo will regenerate with time.\nDisabled by default because there is a bug with the Weapon Wheel.", false);
         NativeCheckboxItem optionAmmoRegenerationGrenadeLauncher = new NativeCheckboxItem("Grenade Launcher Ammo Regeneration?", "If true, the Grenade Launcher's ammo will regenerate with time.", true);
         NativeCheckboxItem optionAmmoRegenerationPipeBomb = new NativeCheckboxItem("Pipe Bomb Regeneration?", "If true, Pipe Bombs will regenerate with time.", true);
@@ -46,7 +52,7 @@ namespace JuggernautMod
         NativeCheckboxItem optionRegenerationArmor = new NativeCheckboxItem("Armor Regeneration?", "If true, your Armor will regenerate when wearing the suit.", true);
         NativeCheckboxItem optionCanJump = new NativeCheckboxItem("Can Jump?", "If false, you cannot Jump while wearing the suit.", false);
         NativeCheckboxItem optionCanEnterVehicles = new NativeCheckboxItem("Can Enter Vehicles?", "If false, you cannot Enter Vehicles while wearing the suit.", true);
-        NativeCheckboxItem optionCanTakeCover = new NativeCheckboxItem("Can Take Cover?", "If false, you cannot Take Cover while wearing the suit.", false);
+        NativeCheckboxItem optionCanTakeCover = new NativeCheckboxItem("Can Take Cover?", "If false, you cannot Take Cover while wearing the suit.", true);
         NativeCheckboxItem optionCanSneak = new NativeCheckboxItem("Can Sneak?", "If false, you cannot Sneak while wearing the suit.", false);
         public int ammoRegenerationCooldownMinigun = 15;
         public int ammoRegenerationCooldownGrenadeLauncher = 1800;
@@ -62,19 +68,23 @@ namespace JuggernautMod
             Function.Call(Hash.REQUEST_ANIM_SET, "ANIM_GROUP_MOVE_BALLISTIC");
             pool.Add(menuJuggernaut);
             pool.Add(subMenuSuitOptions);
+            pool.Add(subMenuWeaponOptions);
             menuJuggernaut.Add(optionEquipJuggernautSuit);
             menuJuggernaut.Add(optionUnequipJuggernautSuit);
-            subMenuSuitOptions.Add(optionAmmoRegenerationMinigun);
-            subMenuSuitOptions.Add(optionAmmoRegenerationGrenadeLauncher);
-            subMenuSuitOptions.Add(optionAmmoRegenerationPipeBomb);
-            subMenuSuitOptions.Add(optionOnlyMinigun);
-            subMenuSuitOptions.Add(optionInfiniteAmmoMinigun);
             subMenuSuitOptions.Add(optionRegenerationHealth);
             subMenuSuitOptions.Add(optionRegenerationArmor);
             subMenuSuitOptions.Add(optionCanJump);
             subMenuSuitOptions.Add(optionCanEnterVehicles);
             subMenuSuitOptions.Add(optionCanTakeCover);
             subMenuSuitOptions.Add(optionCanSneak);
+            subMenuSuitOptions.Add(optionAllowActionMode);
+            subMenuSuitOptions.Add(optionAllowBlood);
+            subMenuWeaponOptions.Add(optionGiveWeapons);
+            subMenuWeaponOptions.Add(optionAmmoRegenerationMinigun);
+            subMenuWeaponOptions.Add(optionAmmoRegenerationGrenadeLauncher);
+            subMenuWeaponOptions.Add(optionAmmoRegenerationPipeBomb);
+            subMenuWeaponOptions.Add(optionOnlyMinigun);
+            subMenuWeaponOptions.Add(optionInfiniteAmmoMinigun);
             optionEquipJuggernautSuit.Activated += (sender, e) => GiveJuggernautSuit(playerPed);
             optionUnequipJuggernautSuit.Activated += (sender, e) => TryToUnequipJuggernautSuit(playerPed);
         }
@@ -90,8 +100,14 @@ namespace JuggernautMod
                 Weapon minigun = weapon[WeaponHash.Minigun];
                 Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
                 Weapon pipeBomb = weapon[WeaponHash.PipeBomb];
-                Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
-                Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
+                if (!optionAllowActionMode.Checked)
+                {
+                    Function.Call(Hash.SET_PED_RESET_FLAG, playerPed, 200, true);
+                }
+                if (!optionAllowBlood.Checked)
+                {
+                    Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, playerPed);
+                }
                 if (!optionCanJump.Checked) { Game.DisableControlThisFrame(Control.Jump); }
                 if (!optionCanEnterVehicles.Checked) { Game.DisableControlThisFrame(Control.Enter); }
                 if (!optionCanTakeCover.Checked) { Game.DisableControlThisFrame(Control.Cover); }
@@ -124,59 +140,62 @@ namespace JuggernautMod
                         regenerationCooldownArmor = 15;
                     }
                 }
-                if (optionAmmoRegenerationMinigun.Checked && weapon.HasWeapon(WeaponHash.Minigun) && minigun.Ammo < 9999)
+                if (optionGiveWeapons.Checked)
                 {
-                    if (ammoRegenerationCooldownMinigun > 0)
+                    if (optionAmmoRegenerationMinigun.Checked && weapon.HasWeapon(WeaponHash.Minigun) && minigun.Ammo < 9999)
                     {
-                        ammoRegenerationCooldownMinigun--;
+                        if (ammoRegenerationCooldownMinigun > 0)
+                        {
+                            ammoRegenerationCooldownMinigun--;
+                        }
+                        else
+                        {
+                            minigun.Ammo++;
+                            ammoRegenerationCooldownMinigun = 15;
+                        }
                     }
-                    else
+                    if (optionAmmoRegenerationGrenadeLauncher.Checked && weapon.HasWeapon(WeaponHash.GrenadeLauncher) && grenadeLauncher.Ammo < 9999)
                     {
-                        minigun.Ammo++;
-                        ammoRegenerationCooldownMinigun = 15;
+                        if (ammoRegenerationCooldownGrenadeLauncher > 0)
+                        {
+                            ammoRegenerationCooldownGrenadeLauncher--;
+                        }
+                        else
+                        {
+                            grenadeLauncher.Ammo += 1;
+                            ammoRegenerationCooldownGrenadeLauncher = 1800;
+                        }
                     }
-                }
-                if (optionAmmoRegenerationGrenadeLauncher.Checked && weapon.HasWeapon(WeaponHash.GrenadeLauncher) && grenadeLauncher.Ammo < 9999)
-                {
-                    if (ammoRegenerationCooldownGrenadeLauncher > 0)
+                    if (optionAmmoRegenerationPipeBomb.Checked && weapon.HasWeapon(WeaponHash.PipeBomb) && pipeBomb.Ammo < 10)
                     {
-                        ammoRegenerationCooldownGrenadeLauncher--;
+                        if (ammoRegenerationCooldownPipeBomb > 0)
+                        {
+                            ammoRegenerationCooldownPipeBomb--;
+                        }
+                        else
+                        {
+                            pipeBomb.Ammo += 1;
+                            ammoRegenerationCooldownPipeBomb = 600;
+                        }
                     }
-                    else
+                    if (optionAmmoRegenerationPipeBomb.Checked && !weapon.HasWeapon(WeaponHash.PipeBomb))
                     {
-                        grenadeLauncher.Ammo += 1;
-                        ammoRegenerationCooldownGrenadeLauncher = 1800;
+                        weapon.Give(WeaponHash.PipeBomb, 1, false, true);
                     }
-                }
-                if (optionAmmoRegenerationPipeBomb.Checked && weapon.HasWeapon(WeaponHash.PipeBomb) && pipeBomb.Ammo < 10)
-                {
-                    if (ammoRegenerationCooldownPipeBomb > 0)
+                    //  I could probably simplify these next 2 conditions..
+                    if (optionInfiniteAmmoMinigun.Checked)
                     {
-                        ammoRegenerationCooldownPipeBomb--;
+                        if (weapon.HasWeapon(WeaponHash.Minigun))
+                        {
+                            minigun.InfiniteAmmo = true;
+                        }
                     }
-                    else
+                    if (!optionInfiniteAmmoMinigun.Checked)
                     {
-                        pipeBomb.Ammo += 1;
-                        ammoRegenerationCooldownPipeBomb = 600;
-                    }
-                }
-                if (optionAmmoRegenerationPipeBomb.Checked && !weapon.HasWeapon(WeaponHash.PipeBomb))
-                {
-                    weapon.Give(WeaponHash.PipeBomb, 1, false, true);
-                }
-                //  I could probably simplify these next 2 conditions..
-                if (optionInfiniteAmmoMinigun.Checked)
-                {
-                    if (weapon.HasWeapon(WeaponHash.Minigun))
-                    {
-                        minigun.InfiniteAmmo = true;
-                    }
-                }
-                if (!optionInfiniteAmmoMinigun.Checked)
-                {
-                    if (weapon.HasWeapon(WeaponHash.Minigun))
-                    {
-                        minigun.InfiniteAmmo = false;
+                        if (weapon.HasWeapon(WeaponHash.Minigun))
+                        {
+                            minigun.InfiniteAmmo = false;
+                        }
                     }
                 }
                 if (playerPed.Health <= 200)
@@ -262,12 +281,15 @@ namespace JuggernautMod
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
             WeaponCollection weapon = Game.Player.Character.Weapons;
-            Weapon minigun = weapon.HasWeapon(WeaponHash.Minigun) ? weapon[WeaponHash.Minigun] : weapon.Give(WeaponHash.Minigun, 0, true, true);
-            minigun.Ammo += 5000;
-            Weapon grenadeLauncher = weapon.HasWeapon(WeaponHash.GrenadeLauncher) ? weapon[WeaponHash.GrenadeLauncher] : weapon.Give(WeaponHash.GrenadeLauncher, 0, true, true);
-            grenadeLauncher.Ammo += 10;
-            Weapon combatMG = weapon.HasWeapon(WeaponHash.CombatMG) ? weapon[WeaponHash.CombatMG] : weapon.Give(WeaponHash.CombatMG, 0, true, true);
-            combatMG.Ammo += 400;
+            if (optionGiveWeapons.Checked)
+            {
+                Weapon minigun = weapon.HasWeapon(WeaponHash.Minigun) ? weapon[WeaponHash.Minigun] : weapon.Give(WeaponHash.Minigun, 0, true, true);
+                minigun.Ammo += 5000;
+                Weapon grenadeLauncher = weapon.HasWeapon(WeaponHash.GrenadeLauncher) ? weapon[WeaponHash.GrenadeLauncher] : weapon.Give(WeaponHash.GrenadeLauncher, 0, true, true);
+                grenadeLauncher.Ammo += 10;
+                Weapon combatMG = weapon.HasWeapon(WeaponHash.CombatMG) ? weapon[WeaponHash.CombatMG] : weapon.Give(WeaponHash.CombatMG, 0, true, true);
+                combatMG.Ammo += 400;
+            }
             isWearingJuggernautSuit = true;
             playerPed.MaxHealth = 2000;
             playerPed.Health = 2000;
@@ -382,26 +404,29 @@ namespace JuggernautMod
             Weapon grenadeLauncher = weapon[WeaponHash.GrenadeLauncher];
             Weapon pipeBomb = weapon[WeaponHash.PipeBomb];
             Weapon combatMG = weapon[WeaponHash.CombatMG];
-            if (weapon.HasWeapon(WeaponHash.Minigun))
+            if (optionGiveWeapons.Checked)
             {
-                minigun.Ammo = 0;
-                weapon.Remove(minigun);
-            }
-            if (weapon.HasWeapon(WeaponHash.GrenadeLauncher))
-            {
-                grenadeLauncher.Ammo = 0;
-                weapon.Remove(grenadeLauncher);
-            }
-            if (weapon.HasWeapon(WeaponHash.PipeBomb))
-            {
-                pipeBomb.Ammo = 0;
-                //  This line will probably throw an error..
-                //weapon.Remove(pipeBomb);
-            }
-            if (weapon.HasWeapon(WeaponHash.CombatMG))
-            {
-                combatMG.Ammo = 0;
-                weapon.Remove(combatMG);
+                if (weapon.HasWeapon(WeaponHash.Minigun))
+                {
+                    minigun.Ammo = 0;
+                    weapon.Remove(minigun);
+                }
+                if (weapon.HasWeapon(WeaponHash.GrenadeLauncher))
+                {
+                    grenadeLauncher.Ammo = 0;
+                    weapon.Remove(grenadeLauncher);
+                }
+                if (weapon.HasWeapon(WeaponHash.PipeBomb))
+                {
+                    pipeBomb.Ammo = 0;
+                    //  This line will probably throw an error..
+                    //weapon.Remove(pipeBomb);
+                }
+                if (weapon.HasWeapon(WeaponHash.CombatMG))
+                {
+                    combatMG.Ammo = 0;
+                    weapon.Remove(combatMG);
+                }
             }
             isWearingJuggernautSuit = false;
             playerPed.MaxHealth = 200;
@@ -517,17 +542,19 @@ namespace JuggernautMod
             if (isWearingJuggernautSuit)   {UnequipJuggernautSuit(playerPed);}
             menuJuggernaut.Remove(optionEquipJuggernautSuit);
             menuJuggernaut.Remove(optionUnequipJuggernautSuit);
-            subMenuSuitOptions.Remove(optionAmmoRegenerationMinigun);
-            subMenuSuitOptions.Remove(optionAmmoRegenerationGrenadeLauncher);
-            subMenuSuitOptions.Remove(optionAmmoRegenerationPipeBomb);
-            subMenuSuitOptions.Remove(optionOnlyMinigun);
-            subMenuSuitOptions.Remove(optionInfiniteAmmoMinigun);
             subMenuSuitOptions.Remove(optionRegenerationHealth);
             subMenuSuitOptions.Remove(optionRegenerationArmor);
             subMenuSuitOptions.Remove(optionCanJump);
             subMenuSuitOptions.Remove(optionCanEnterVehicles);
             subMenuSuitOptions.Remove(optionCanTakeCover);
             subMenuSuitOptions.Remove(optionCanSneak);
+            subMenuSuitOptions.Remove(optionAllowActionMode);
+            subMenuSuitOptions.Remove(optionAllowBlood);
+            subMenuWeaponOptions.Remove(optionAmmoRegenerationMinigun);
+            subMenuWeaponOptions.Remove(optionAmmoRegenerationGrenadeLauncher);
+            subMenuWeaponOptions.Remove(optionAmmoRegenerationPipeBomb);
+            subMenuWeaponOptions.Remove(optionOnlyMinigun);
+            subMenuWeaponOptions.Remove(optionInfiniteAmmoMinigun);
             pool.Remove(subMenuSuitOptions);
             pool.Remove(menuJuggernaut);
         }
