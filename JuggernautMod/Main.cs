@@ -39,7 +39,7 @@ namespace JuggernautMod
         private static readonly NativeSubmenuItem subMenuWeaponOptionsOpener = menuJuggernaut.AddSubMenu(subMenuWeaponOptions);
         NativeItem functionEquipJuggernautSuit = new NativeItem("Buy Juggernaut Suit", "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.", "FREE");
         NativeItem functionUnequipJuggernautSuit = new NativeItem("Unequip Juggernaut Suit", "Remove the suit?", "");
-        static NativeListItem<int> intSuitHealth = new NativeListItem<int>("Health", "How much Health the Suit has.", 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000);
+        static NativeListItem<int> intSuitHealth = new NativeListItem<int>("Health", "How much Health the Suit has.", 1000, 2000, 3000, 4000, 5000, 6000, 7000);
         static NativeCheckboxItem boolAllowActionMode = new NativeCheckboxItem("Allow Action Mode?", "If false, you cannot enter Action Mode while in the suit.", false);
         static NativeCheckboxItem boolAllowBlood = new NativeCheckboxItem("Allow Blood?", "If false, Blood Damage will constantly be cleared while in the suit.", true);
         static NativeCheckboxItem boolGiveWeapons = new NativeCheckboxItem("Give Weapons?", "If true, you will be given a Combat MG, Minigun and Grenade Launcher.", false);
@@ -49,9 +49,9 @@ namespace JuggernautMod
         NativeCheckboxItem boolOnlyMinigun = new NativeCheckboxItem("Only Minigun?", "If true, only the Minigun can be used when wearing the suit. The Weapon Wheel will also be disabled.", false);
         NativeCheckboxItem boolInfiniteAmmoMinigun = new NativeCheckboxItem("Infinite Ammo for Minigun?", "If true, the Minigun will never run out of ammo.", false);
         NativeCheckboxItem boolRegenerationHealth = new NativeCheckboxItem("Health Regeneration?", "If true, your Health will regenerate when wearing the suit.", true);
-        static NativeListItem<int> intHealthRegenInterval = new NativeListItem<int>("Health Regeneration Interval", "Countdown.", 10, 15, 30, 45, 60);
+        static NativeListItem<int> intHealthRegenInterval = new NativeListItem<int>("Health Regeneration Interval", "Countdown.", 5, 10, 15, 30, 45, 60);
         NativeCheckboxItem boolRegenerationArmor = new NativeCheckboxItem("Armor Regeneration?", "If true, your Armor will regenerate when wearing the suit.", true);
-        static NativeListItem<int> intArmorRegenInterval = new NativeListItem<int>("Armor Regeneration Interval", "Countdown.", 10, 15, 30, 45, 60);
+        static NativeListItem<int> intArmorRegenInterval = new NativeListItem<int>("Armor Regeneration Interval", "Countdown.", 5, 10, 15, 30, 45, 60);
         NativeCheckboxItem boolCanJump = new NativeCheckboxItem("Can Jump?", "If false, you cannot Jump while wearing the suit.", false);
         NativeCheckboxItem boolCanEnterVehicles = new NativeCheckboxItem("Can Enter Vehicles?", "If false, you cannot Enter Vehicles while wearing the suit.", true);
         NativeCheckboxItem boolCanTakeCover = new NativeCheckboxItem("Can Take Cover?", "If false, you cannot Take Cover while wearing the suit.", true);
@@ -224,9 +224,6 @@ namespace JuggernautMod
             Player player = Game.Player;
             Ped playerPed = Game.Player.Character;
             var Inventory = Companion.Inventories.Current;
-            //  Better way of declaring the variable 2 lines below.
-            //JuggernautSuit itemJuggernautSuit;
-            //  Commenting this out for now because it crashes the script.
             if (Companion.IsReady)
             {
                 JuggernautSuit itemJuggernautSuit = new JuggernautSuit();
@@ -567,29 +564,46 @@ namespace JuggernautMod
             pool.Remove(menuJuggernaut);
         }
     }
-    public class JuggernautSuit : StackableItem
+    public class BaseItem : StackableItem
     {
-        public override string Name => "Juggernaut Suit";
-        public override string Description => "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.";
+        public override string Name => "Base Item";
         public override ScaledTexture Icon => new ScaledTexture("", "");
-        public override int Maximum => 5;
-        public override int Value => 5000;
-        public JuggernautSuit()
+        public BaseItem()
         {
             //Used += OnUseItem;
-            Used += (sender, e) => OnUseItem();
+            Used += (sender, e) => UseItem();
         }
-        private void OnUseItem()
+        private void UseItem()
         {
-            Player player = Game.Player;
-            Ped playerPed = Game.Player.Character;
-            bool consumeItem = true;
-            JuggernautScript.TryToEquipJuggernautSuit(playerPed);
-            if (consumeItem)
+            if (CanUseItem())
             {
                 if (Count == 1) { Remove(); }
                 else { Count--; }
+                OnUseItem();
             }
+        }
+        public virtual bool CanUseItem()
+        {
+            return true;
+        }
+        public virtual void OnUseItem()
+        {
+
+        }
+    }
+    public class JuggernautSuit : BaseItem
+    {
+        public override string Name => "Juggernaut Suit";
+        public override ScaledTexture Icon => new ScaledTexture("", "");
+        public override string Description => "Weighing roughly 200 lbs, this suit contains an assortment of Level IV Ballistic Plating and many thick, protective layers of Para-Aramid Fiber material underneath.";
+        public override int Maximum => 5;
+        public override int Value => 5000;
+        public override void OnUseItem()
+        {
+            Player player = Game.Player;
+            Ped playerPed = Game.Player.Character;
+            JuggernautScript.TryToEquipJuggernautSuit(playerPed);
+            base.OnUseItem();
         }
     }
 }
